@@ -1,44 +1,43 @@
+#include <Arduino.h>
+#include <DHT.h>
 #include "DHTRead.h"
 
-DHT DHT22_10(2, DHT22);
-DHT DHT22_15(3, DHT22);
-DHT DHT22_20(4, DHT22);
+#define DHTTYPE DHT11
 
-DHT_DATA Package[3] = {
-  {&DHT22_10, 0, 0, 0},
-  {&DHT22_15, 0, 0, 0},
-  {&DHT22_20, 0, 0, 0},
-};
+#define DHTPIN_10 2
+#define DHTPIN_15 3
+#define DHTPIN_20 4
 
-char ErrorHandling(float temperature, float humidity)
+static DHT dht10(DHTPIN_10, DHTTYPE);
+static DHT dht15(DHTPIN_15, DHTTYPE);
+static DHT dht20(DHTPIN_20, DHTTYPE);
+
+void dhtBegin()
 {
-    if (isnan(temperature)) return TEMP_NAN;
-    if (temperature > 80 || temperature < -40) return TEMP_RANGE;
-    if (isnan(humidity)) return HUM_NAN;
-    if (humidity > 100 || humidity < 0) return HUM_RANGE;
-
-    return DHT_OK;
+    dht10.begin();
+    dht15.begin();
+    dht20.begin();
 }
 
-void DHT_INIT ()
+static bool validReading(float t, float h)
 {
-    DHT22_10.begin();
-    DHT22_15.begin();
-    DHT22_20.begin();
+    return !isnan(t) && !isnan(h);
 }
 
-void DHT_READ()
+bool dhtRead(DhtPack &data)
 {
-    float T;
-    float RH;
-    for (int i = 0; i < 3; i++) 
-    {
-        T = Package[i].sensor->readTemperature();
-        RH = Package[i].sensor->readHumidity();
+    data.t10 = dht10.readTemperature();
+    data.h10 = dht10.readHumidity();
 
-        Package[i].Temperature = T;
-        Package[i].Humidity = RH;
-        Package[i].error = ErrorHandling(T, RH);
-    }    
-} 
+    data.t15 = dht15.readTemperature();
+    data.h15 = dht15.readHumidity();
 
+    data.t20 = dht20.readTemperature();
+    data.h20 = dht20.readHumidity();
+
+    if (!validReading(data.t10, data.h10)) return false;
+    if (!validReading(data.t15, data.h15)) return false;
+    if (!validReading(data.t20, data.h20)) return false;
+
+    return true;
+}
