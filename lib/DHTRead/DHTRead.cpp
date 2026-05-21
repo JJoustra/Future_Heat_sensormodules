@@ -10,10 +10,30 @@
  * @brief initialisatie functie voor de 3 DHT22 opnemers.
  */
 void DHTInit ()
+#include <Arduino.h>
+#include <DHT.h>
+#include "DHTRead.h"
+
+#define DHTTYPE DHT11
+
+#define DHTPIN_10 2
+#define DHTPIN_15 3
+#define DHTPIN_20 4
+
+static DHT dht10(DHTPIN_10, DHTTYPE);
+static DHT dht15(DHTPIN_15, DHTTYPE);
+static DHT dht20(DHTPIN_20, DHTTYPE);
+
+void dhtBegin()
 {
-    DHT22_10.begin();
-    DHT22_15.begin();
-    DHT22_20.begin();
+    dht10.begin();
+    dht15.begin();
+    dht20.begin();
+}
+
+static bool validReading(float t, float h)
+{
+    return !isnan(t) && !isnan(h);
 }
 
 /**
