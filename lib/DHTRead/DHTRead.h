@@ -1,24 +1,24 @@
-#pragma once
 #include <DHT.h>
+#define DHT22 22
 
-
-enum DHT_Error {
-    DHT_OK = 0,
-    TEMP_NAN = 1,
-    TEMP_RANGE = 2,
-    HUM_NAN = 3,
-    HUM_RANGE = 4
-};
-
+//DHT package opbouw
 struct DHT_DATA {
-    DHT* sensor;
+    const char* SensorNaam;
+    DHT* Sensor;
     float Temperature;
     float Humidity;
-    float error;
 };
 
-extern DHT_DATA Package[3];
+//package declaratie
+DHT DHT22_10(2, DHT22);
+DHT DHT22_15(3, DHT22);
+DHT DHT22_20(4, DHT22);
 
-char ErrorHandling(float temperature, float humidity);
-void DHT_READ();
-void DHT_INIT();
+DHT_DATA Package[3] = {
+  {"DHT22_10", &DHT22_10, 0, 0},
+  {"DHT22_15", &DHT22_15, 0, 0},
+  {"DHT22_20", &DHT22_20, 0, 0}
+};
+
+void DHTFillMsg();
+void DHTInit();
