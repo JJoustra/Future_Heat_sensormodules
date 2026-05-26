@@ -1,3 +1,15 @@
+/*
+* DHTRead.cpp
+* auteur: Amber Laci
+* versie: 1.2
+* Code bestand met de functies om de DHT22 sensoren uit te lezen.
+*/
+#include "DHTRead.h"
+
+/**
+ * @brief initialisatie functie voor de 3 DHT22 opnemers.
+ */
+void DHTInit ()
 #include <Arduino.h>
 #include <DHT.h>
 #include "DHTRead.h"
@@ -24,20 +36,22 @@ static bool validReading(float t, float h)
     return !isnan(t) && !isnan(h);
 }
 
-bool dhtRead(DhtPack &data)
+/**
+ * @brief vult de globale struct "Package" (zie DHTRead.h) met de metingen van de sensoren.
+ */
+void DHTFillMsg()
 {
-    data.t10 = dht10.readTemperature();
-    data.h10 = dht10.readHumidity();
+    float T;
+    float RH;
+    for (int i = 0; i < 3; i++) 
+    {
+        T = Package[i].Sensor->readTemperature();
+        RH = Package[i].Sensor->readHumidity();
 
-    data.t15 = dht15.readTemperature();
-    data.h15 = dht15.readHumidity();
+        Package[i].Temperature = T;
+        Package[i].Humidity = RH;
+    }    
+} 
 
-    data.t20 = dht20.readTemperature();
-    data.h20 = dht20.readHumidity();
 
-    if (!validReading(data.t10, data.h10)) return false;
-    if (!validReading(data.t15, data.h15)) return false;
-    if (!validReading(data.t20, data.h20)) return false;
 
-    return true;
-}
