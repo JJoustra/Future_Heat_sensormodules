@@ -1,5 +1,9 @@
+#pragma once
 #include <DHT.h>
 #define DHT22 22
+#define PIN10 2
+#define PIN15 3
+#define PIN20 4
 
 //DHT package opbouw
 struct DHT_DATA {
@@ -9,16 +13,12 @@ struct DHT_DATA {
     float Humidity;
 };
 
-//package declaratie
-DHT DHT22_10(2, DHT22);
-DHT DHT22_15(3, DHT22);
-DHT DHT22_20(4, DHT22);
+//sensoren declaratie
+extern DHT DHT22_10;
+extern DHT DHT22_15;
+extern DHT DHT22_20;
 
-DHT_DATA Package[3] = {
-  {"DHT22_10", &DHT22_10, 0, 0},
-  {"DHT22_15", &DHT22_15, 0, 0},
-  {"DHT22_20", &DHT22_20, 0, 0}
-};
+extern DHT_DATA Package[3];
 
-void DHTFillMsg();
+bool DHTFillMsg();
 void DHTInit();

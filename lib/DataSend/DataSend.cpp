@@ -1,6 +1,6 @@
 /*
 * bestand: DataSend.cpp
-* auteur: Stan Dam 
+* auteurs: Stan Dam, Amber Laçi, Jelle Joustra
 * versie: 1.1
 * Code bestand met de functies om gemeten waardes naar de influxdb te schrijven. 
 * WiFi instellingen en database toegang dienen in DataSend.h te worden ingevoerd.
@@ -12,18 +12,19 @@
  * Als deze na 20s nog niet is verbonden blijft de led aan. druk in dit geval op reset en controlleer de wifi instellinden in DataSend.h
  * @return simpele true/false of de verbinding is gelukt.
  */
-static bool connectWiFi()
+bool connectWiFi(const char* ssid, const char* pass)
 {
     WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASS);
-    WiFi.setTxPower(WIFI_POWER_8_5dBm);
-    Serial.print("Connecting to WiFi");
+    WiFi.begin(ssid, pass);
+    //WiFi.setTxPower(WIFI_POWER_8_5dBm);
 
     unsigned long start = millis();
     while (WiFi.status() != WL_CONNECTED && millis() - start < 20000)
     {
-        delay(500);
+        if (start % 250){
+        digitalWrite(ONBOARD_LED, !digitalRead(ONBOARD_LED)); 
     }
+        }//knipperen mss handiger in main maar komt nu hier net iets beter uit
 
     if (WiFi.status() != WL_CONNECTED)
     {
@@ -35,25 +36,18 @@ static bool connectWiFi()
  * @brief start de verbinding met de database en controleert vervolgens of voor succes.
  * @return simpele true/false of de verbinding is gelukt.
  */
-bool dbBegin()
+bool dbBegin(const char* dbURL, const char* dbName, const char* dbUser, const char* dbPass)
 {
-    if (!connectWiFi()) return false;
+    //if (!connectWiFi()) return false;     //niet super zeker of deze lijn nodig is
 
     client.setConnectionParamsV1(
-        INFLUXDB_URL,
-        INFLUXDB_DB_NAME,
-        INFLUXDB_USER,
-        INFLUXDB_PASSWORD
+        dbURL,
+        dbName,
+        dbUser,
+        dbPass
     );
 
-    if (!client.validateConnection())
-    {
-        Serial.print("InfluxDB failed: ");
-        Serial.println(client.getLastErrorMessage());
-        return false;
-    }
-
-    Serial.println("InfluxDB connected");
+    if (!client.validateConnection()) return false;
     return true;
 }
 
@@ -86,7 +80,7 @@ bool dbSendFloorTemp(float T, const char* ID)
  * @param H20 gemeten luchtvochtigheid op 2m hoogte in %.
  * @param ID identifikatie van de specifieke module.
  */
-bool dbSendPaalDht(float t10, float h10, float t15, float h15, float t20, float h20, const char* ID)
+bool dbSendPaalDHT(float t10, float h10, float t15, float h15, float t20, float h20, const char* ID)
 {
     if (WiFi.status() != WL_CONNECTED) return false;
         

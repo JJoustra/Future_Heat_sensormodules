@@ -1,28 +1,38 @@
-#include <Arduino.h>
-#include "DHTRead.h"
+#include "admin.h"
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  Serial.print("Sensor ");
-  DHT_INIT();
+
+  /***************************paal module setup**************************/
+  pinMode(ONBOARD_LED, OUTPUT);
+  DHTInit();
+  if (!connectWiFi(WIFI_SSID, WIFI_PASS)) {error(NOWIFI);}
+  if (!dbBegin(INFLUXDB_URL, INFLUXDB_DB_NAME, INFLUXDB_USER, INFLUXDB_PASSWORD)) {error(NODB);}
+
+  /***************************vloer module setup**************************/
+  // ds18Begin();
+  // digitalWrite(21, LOW);
+  // if (!WiFi.begin(WIFI_SSID, WIFI_PASS)); //error(NOWIFI);
+  // if (!dbBegin(INFLUXDB_URL, INFLUXDB_DB_NAME, INFLUXDB_USER, INFLUXDB_PASSWORD)); //error(NODB);
+
 }
 
 void loop() {
-  //als ik hier meer dan 10 regels zie dan doe ik jullie wat aan
-   Serial.print("Sensor ");
-  DHT_READ();
-  for (int i = 0; i < 3; i++) {
-    Serial.print("Sensor ");
-    /*Serial.print(i);
-    Serial.println(":");
-    
-    Serial.print("Temperatuur: ");
-    Serial.println(Package[i].Temperature);
+  /***************************paal module loop**************************/
+  // DHTFillMsg();
+  // dbSendPaalDHT(
+  //               Package[0].Temperature, 
+  //               Package[0].Humidity, 
+  //               Package[1].Temperature, 
+  //               Package[1].Humidity, 
+  //               Package[2].Temperature, 
+  //               Package[2].Humidity, 
+  //               DEVICE_ID
+  //             );
 
-    Serial.print("Humidity: ");
-    Serial.println(Package[i].Humidity);
-    Serial.println("-------------------");*/
-  }
-  delay(2000);
+  /***************************vloer module loop**************************/
+  // float tempC;
+  // ds18Read(tempC);
+  // dbSendFloorTemp(tempC, DEVICE_ID);
+
+  //delay(MINUUT);
 }
