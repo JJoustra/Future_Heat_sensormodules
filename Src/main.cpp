@@ -1,15 +1,16 @@
 #include "admin.h"
 
 void setup() {
+    pinMode(ONBOARD_LED, OUTPUT);
 
   /***************************paal module setup**************************/
-  pinMode(ONBOARD_LED, OUTPUT);
   DHTInit();
   if (!connectWiFi(WIFI_SSID, WIFI_PASS)) {error(NOWIFI);}
   if (!dbBegin(INFLUXDB_URL, INFLUXDB_DB_NAME, INFLUXDB_USER, INFLUXDB_PASSWORD)) {error(NODB);}
 
   /***************************vloer module setup**************************/
   // ds18Begin();
+  // pinMode(DS18_PIN, PULLUP);
   // digitalWrite(21, LOW);
   // if (!WiFi.begin(WIFI_SSID, WIFI_PASS)); //error(NOWIFI);
   // if (!dbBegin(INFLUXDB_URL, INFLUXDB_DB_NAME, INFLUXDB_USER, INFLUXDB_PASSWORD)); //error(NODB);
