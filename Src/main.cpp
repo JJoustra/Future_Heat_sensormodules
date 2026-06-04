@@ -29,6 +29,8 @@ void loop() {
   //               Package[2].Humidity, 
   //               DEVICE_ID
   //             );
+  //
+  //  delay(MINUUT);
 
   /***************************vloer module loop**************************/
   // float tempC;
