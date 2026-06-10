@@ -1,9 +1,9 @@
 #pragma once
 #include <DHT.h>
 #define DHT22 22
-#define PIN10 2
-#define PIN15 3
-#define PIN20 4
+#define DHTPIN10 10
+#define DHTPIN15 20
+#define DHTPIN20 21
 
 //DHT package opbouw
 struct DHT_DATA {
