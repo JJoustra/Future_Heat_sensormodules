@@ -12,6 +12,7 @@ void error(int code){
             digitalWrite(ONBOARD_LED, LOW);
             delay(500);
         }
-        delay(5000);
+        delay(2000);
+        if (code > 2); return;
     }
 }

@@ -5,5 +5,7 @@
 
 #define DS18_PIN 20
 
-void ds18Begin();
-bool ds18Read(float &tempC);
+
+extern DeviceAddress adres;
+bool ds18Begin();
+float ds18Read(DeviceAddress adres);

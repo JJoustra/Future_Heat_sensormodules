@@ -59,11 +59,11 @@ bool dbBegin(const char* dbURL, const char* dbName, const char* dbUser, const ch
  */
 bool dbSendFloorTemp(float T, const char* ID)
 {
-    if (WiFi.status() != WL_CONNECTED) return false;
+    if (!client.validateConnection()) return false;
 
     Point p("vloer");
     p.addTag("ID", ID);
-    p.addField("temp", T);
+    p.addField("T", T);
 
     if (!client.writePoint(p)) return false;
 
@@ -82,9 +82,9 @@ bool dbSendFloorTemp(float T, const char* ID)
  */
 bool dbSendPaalDHT(float t10, float h10, float t15, float h15, float t20, float h20, const char* ID)
 {
-    if (WiFi.status() != WL_CONNECTED) return false;
+    if (!client.validateConnection()) return false;
         
-    Point p("paal");
+    Point p("lucht");
     p.addTag("ID", ID);
 
     p.addField("T10", t10);

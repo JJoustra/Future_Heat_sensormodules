@@ -5,10 +5,10 @@
 
 #define ONBOARD_LED 8
 #ifndef INFLUXDB_URL
-#define INFLUXDB_URL "http://PLACEHOLDER:PLACEHOLDER"
+#define INFLUXDB_URL "http://192.168.1.31:8089"
 #endif
 #ifndef INFLUXDB_DB_NAME
-#define INFLUXDB_DB_NAME "PLACEHOLDER"
+#define INFLUXDB_DB_NAME "home"
 #endif
 
 static InfluxDBClient client(INFLUXDB_URL, INFLUXDB_DB_NAME);

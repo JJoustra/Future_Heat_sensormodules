@@ -6,15 +6,20 @@
 */
 #include "DS18Read.h"
 
+DeviceAddress adres;
 static OneWire oneWire(DS18_PIN);
 static DallasTemperature sensors(&oneWire);
 
 /**
  * @brief initialisatie functie voor de DS18B20 opnemer.
  */
-void ds18Begin()
+bool ds18Begin()
 {
     sensors.begin();
+
+     oneWire.reset_search();
+     if (!oneWire.search(adres)) return false;
+     return true;
 }
 
 /**
@@ -22,12 +27,11 @@ void ds18Begin()
  * @param tempC floating point variabele waarnaar de temperatuur in graden Celsius geschreven wordt.
  * @return true of false voor of de meting succesvol was of niet.
  */
-bool ds18Read(float &tempC)
+float ds18Read(DeviceAddress adres)
 {
     sensors.requestTemperatures();
-    tempC = sensors.getTempCByIndex(0);
+    float tempC = sensors.getTempC(adres);
 
-    if (tempC == DEVICE_DISCONNECTED_C) return false;
 
-    return true;
+    return tempC;
 }
